@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const validator = require('validator')
 
 // connecting database
 
@@ -23,6 +23,37 @@ mongoose.connect("mongodb://localhost:27017/newdb",
  * 6. maxlength
  *
  */
+// const playlistSchema = new mongoose.Schema(
+//     {
+//         name: {
+//             type: String,
+//             lowercase: true,
+//             trim: true,
+//             maxlength: 30
+//         },
+//         rn: {
+//             type: Number,
+//             validate(value) {
+//                 if (value < 0) {
+//                     throw new Error("Roll NO cant be negative")
+//                 }
+//             }
+//         },
+//         city: {
+//             type: String,
+//             rewuired: true,
+//             enum: ["dehradun", "Delhi"] // check values if is in the given array
+
+//         },
+//         date: {
+//             type: Date,
+//             default: Date.now
+//         }
+
+//     }
+// )
+
+
 const playlistSchema = new mongoose.Schema(
     {
         name: {
@@ -31,11 +62,27 @@ const playlistSchema = new mongoose.Schema(
             trim: true,
             maxlength: 30
         },
-        rn: Number,
+        rn: {
+            type: Number,
+            validate(value) {
+                if (value < 0) {
+                    throw new Error("Roll NO cant be negative")
+                }
+            }
+        },
         city: {
             type: String,
-            rewuired: true,
-            enum: ["dehradun", "Delhi"] // check values if is in the given array
+            required: true,
+
+        },
+        email: {
+            type: String,
+            unique: true,
+            validate(value) {
+                if (!validator.isEmail(value)) {
+                    throw new Error("not a valid email")
+                }
+            }
 
         },
         date: {
@@ -45,7 +92,6 @@ const playlistSchema = new mongoose.Schema(
 
     }
 )
-
 // // collection crating
 // const collection = new mongoose.model("Developer", playlistSchema);
 
@@ -80,26 +126,38 @@ const playlistSchema = new mongoose.Schema(
 const collection = new mongoose.model("Developer", playlistSchema);
 
 
-// crearting documents and insert the data into field
-const createDOC = async () => {
-    try {
-        const doc = new collection({
-            name: "Raghav singh",
-            rn: 16,
-            city: "Delhi",
+// // crearting documents and insert the data into field
+// const createDOC = async () => {
+//     try {
+//         const doc = new collection({
+//             name: "Anu Chauann",
+//             rn: 14,
+//             city: "Najibabad",
 
-        })
+//         })
+//         const doc1 = new collection({
+//             name: "Vikas Chauann",
+//             rn: 74,
+//             city: "Najibabad",
+
+//         })
+//         const doc2 = new collection({
+//             name: "Vimal",
+//             rn: 67,
+//             city: "Rajpur",
+
+//         })
 
 
-        const result = await collection.insertMany([doc]);
-        console.log(result)
-    }
-    catch (err) {
-        console.log(err);
-    }
-}
-// calling function
-createDOC();
+//         const result = await collection.insertMany([doc,doc1,doc]);
+//         console.log(result)
+//     }
+//     catch (err) {
+//         console.log(err);
+//     }
+// }
+// // calling function
+// createDOC();
 
 
 
@@ -120,7 +178,28 @@ createDOC();
 
 
 
+// crearting documents and insert the data into field
+const createDOC = async () => {
+    try {
+        const doc = new collection({
+            name: "Arjun",
+            rn: 18,
+            email: "arjun@gmail.ccom",
+            city: "Agra",
 
+        })
+
+
+
+        const result = await collection.insertMany([doc]);
+        console.log(result)
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+// calling function
+createDOC();
 
 
 
